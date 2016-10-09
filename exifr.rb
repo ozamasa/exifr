@@ -8,7 +8,6 @@ output = "./output"
 Find.find(input) do |f|
 	next unless FileTest.file?(f)
 	begin
-#if File.basename(f).gsub(".jpg", "")[-1].to_i > 1
 		tm = nil
 		fx = nil
 		if File.basename(f).downcase.index(".jpg")
@@ -20,15 +19,17 @@ Find.find(input) do |f|
 		elsif File.basename(f).downcase.index(".mp4")
 			tm = File.mtime(f).strftime("%Y%m%d%H%M%S")
 			fx = "mp4"
+		elsif File.basename(f).downcase.index(".mov")
+			tm = File.mtime(f).strftime("%Y%m%d%H%M%S")
+			fx = "mov"
 		end
-		if tm
+		if tm && fx
 			cn = 0
 			for i in 0..9
 				cn = i and break unless File.exist?("#{output}/#{tm}#{i}.#{fx}")
 			end
 			File.rename("#{input}/#{File.basename(f)}", "#{output}/#{tm}#{cn}.#{fx}")
 		end
-#end
 	rescue => e
 		p e
 	end
